@@ -6,6 +6,8 @@ Example usage from within Slack:
 
 `/latex $ E = mc^2 $`
 
+![Demo](https://cloud.githubusercontent.com/assets/1005545/13491495/8405756a-e0e7-11e5-8d22-d76b99ff7a36.gif)
+
 ## Installation
 
 This server requires:
