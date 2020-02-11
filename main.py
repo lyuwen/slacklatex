@@ -62,7 +62,7 @@ def render_latex():
     slack_client.files_upload(
         channels=channel,
         file=rendered,
-        text=request.form['text'])
+        title=request.form['text'])
     return ""
 
 
