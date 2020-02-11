@@ -1,4 +1,4 @@
-#slack-latex
+# slack-latex
 
 This is a Slack bot that implements a `/latex` [slash command](https://api.slack.com/slash-commands).
 
@@ -24,7 +24,7 @@ On a Ubuntu server, you can install all of these with the following command:
 
 ```bash
 sudo apt-get install python3-pip texlive
-sudo pip install --upgrade matplotlib slackclient flask
+sudo pip3 install --upgrade matplotlib slackclient flask
 ```
 
 ## Configuring slack-latex
