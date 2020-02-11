@@ -9,11 +9,11 @@ from io import BytesIO, FileIO
 import matplotlib as mpl
 mpl.use("pgf")
 pgf_with_custom_preamble = {
-  "pgf.texsystem": "pdflatex", # Use pdflatex
-  "text.usetex": True,    # use tex renderer
-  "pgf.rcfonts": False,   # don't setup fonts from rc parameters
-  "pgf.preamble": [
-     r"\usepackage{amsmath,amsfonts,amssymb}",  # Added some math packages
+    "pgf.texsystem": "pdflatex", # Use pdflatex
+    "text.usetex": True,    # use tex renderer
+    "pgf.rcfonts": False,   # don't setup fonts from rc parameters
+    "pgf.preamble": [
+         r"\usepackage{amsmath,amsfonts,amssymb}",  # Added some math packages
      ]
 }
 mpl.rcParams.update(pgf_with_custom_preamble)
@@ -47,18 +47,18 @@ def render_latex():
         print("Signature not match.")
     print(request.form['text'],file=sys.stderr)
     try:
-        rendered = render_latex_mpl('{}'.format(request.form['text']), fontsize=12, dpi=300, format_='png')
+        rendered = render_latex_mpl(request.form['text'], fontsize=12, dpi=300, format_='png')
     except Exception as e:
         print(e)
         return "Invalid LaTeX? {}".format(request.form['text'])
     #
     if request.form["channel_name"] == "directmessage":
-      # DM
-      channel = "@" + request.form["user_name"]
+        # DM
+        channel = "@" + request.form["user_name"]
     else:
-      channel = request.form["channel_name"]
-      slack_client.channels_join(name=channel)
-      channel = "#" + channel
+        channel = request.form["channel_name"]
+        slack_client.channels_join(name=channel)
+        channel = "#" + channel
     slack_client.files_upload(
         channels=channel,
         file=rendered,
@@ -78,7 +78,6 @@ def render_latex_mpl(formula, fontsize=12, dpi=300, format_='svg'):
     fig.savefig(buffer_, dpi=dpi, transparent=True, format=format_, bbox_inches='tight', pad_inches=0.02)
     plt.close(fig)
     buffer_.seek(0)
-    #print(buffer_.getvalue())
     return buffer_
 
 
