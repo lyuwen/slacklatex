@@ -8,26 +8,33 @@ Example usage from within Slack:
 
 ![Demo](https://cloud.githubusercontent.com/assets/1005545/13491495/8405756a-e0e7-11e5-8d22-d76b99ff7a36.gif)
 
+This version has now been updated to work with the latest Slack API version.
+This version also uses **matplotlib** to render the latex equations, though PDFLaTeX is still required.
+
 ## Installation
 
 This server requires:
 
 * [Flask](http://flask.pocoo.org/)
-* [Requests](http://docs.python-requests.org/en/master/)
+* [matplotlib](https://github.com/matplotlib/matplotlib)
+* [slackclient](https://github.com/slackapi/python-slackclient)
 * `pdflatex` from [TeXLive](https://www.tug.org/texlive/)
-* `convert` from [imagemagick](http://www.imagemagick.org)
 
 On a Ubuntu server, you can install all of these with the following command:
 
 ```bash
-sudo apt-get install python3-flask python3-requests texlive imagemagick
+sudo apt-get install python3-pip texlive
+sudo pip install --upgrade matplotlib slackclient flask
 ```
 
 ## Configuring slack-latex
 
-`slack-latex` requires a Slack API token (for uploading/posting the rendered formulae).
-It also expects you to provide a Slack slash command verification token, which allows
-the server to verify that requests indeed came from Slack.
+`slack-latex` requires a [Bot User OAuth Access Token](https://api.slack.com/docs/oauth) 
+and a [Signing Secret](https://api.slack.com/docs/verifying-requests-from-slack).
+To begin with, create a new Slack App, enable **Incoming Webhooks**, **Slash Commands** and **Bots**.
+Add permissions including `channels:join`, `channels:read`, `chat:write`, `commands`, `files:write`,
+`im:read`, `im:write`, `users:read`, `incoming-webhook`, and install the App.
+The bot user token can be found in *OAuth & Permission* section and the signing secret in *Basic Information*.
 
 ### Create a config file for slack-latex
 
@@ -37,25 +44,7 @@ Start by copying the example config file:
 cp config.ini.example config.ini
 ```
 
-### Create a bot user for your organization
-
-Go to https://my.slack.com/services/new/bot and create a new bot.  Ours is named `latex-bot`.
-
-Once you've created the bot, copy the `API Token` from the Integration Settings
-into the `bot_user_api_token` field in your `config.ini`.
-
-Feel free to configure your bot as you see fit (name, avatar, etc).
-
-### Create a slash command for your organization
-
-Go to https://my.slack.com/services/new/slash-commands and create a new slash
-command.  We recommend `/latex`.
-
-Set the URL to the url you plan to run this server from.  Make sure your
-port matches the one in `main.py`.
-
-Copy the verification token from Integration Settings -> Token into
-`config.ini` as the `slash_command_verification_token` value.
+Save the tokens into the config file, and keep it safe.
 
 ### Launch the server
 
@@ -65,4 +54,11 @@ Start up your server:
 python3 main.py
 ```
 
-Then, try testing out your shiny new slash command.
+Then, try testing out your new slash command.
+
+
+## Known issues
+
+* Slack slash command has a ~3 seconds timeout and due to the slow speed of the compilation of the LaTeX equation,
+  it could happen that Slack will assume the command timed out while it actually is working and post the rendered
+  equation some moment later.
