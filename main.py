@@ -63,9 +63,6 @@ def render_latex():
         channels=channel,
         file=rendered,
         text=request.form['text'])
-    slack_client.chat_postMessage(
-        channel=channel,
-        text=request.form['text'])
     return ""
 
 
